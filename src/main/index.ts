@@ -2,7 +2,7 @@ import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import { app, BrowserWindow, shell } from 'electron';
 import { createIPCHandler } from 'electron-trpc/main';
 import { join } from 'path';
-import icon from '../../resources/icon.png?asset';
+import icon from '../../resources/icon.png';
 import { router } from './api';
 
 function createWindow(): BrowserWindow {
@@ -74,3 +74,5 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+
