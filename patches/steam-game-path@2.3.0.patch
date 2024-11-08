@@ -1,0 +1,16 @@
+diff --git a/lib/index.d.mts b/lib/index.d.mts
+index 1a648b56dd9a501085afb91a39fed495f7b74f7e..dadba670ef29792a8a11a24413fdc1bde0c32672 100644
+--- a/lib/index.d.mts
++++ b/lib/index.d.mts
+@@ -1,9 +1,9 @@
+-interface GamePath {
++export interface GamePath {
+     path: string;
+     name: string;
+     executable?: Promise<any>;
+ }
+-interface SteamPath {
++export interface SteamPath {
+     game: GamePath | null;
+     steam: {
+         path: string;

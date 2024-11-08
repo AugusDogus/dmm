@@ -1,6 +1,7 @@
 import { initTRPC } from '@trpc/server';
 import { observable } from '@trpc/server/observable';
 import { EventEmitter } from 'events';
+import { getGamePath } from 'steam-game-path';
 import superjson from 'superjson';
 import z from 'zod';
 
@@ -30,6 +31,13 @@ export const router = t.router({
       };
     });
   }),
+  steam: t.procedure.query(() => {
+    const paths = getGamePath(1422450);
+    return {
+      paths
+    };
+  }),
 });
 
 export type AppRouter = typeof router;
+

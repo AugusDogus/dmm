@@ -31,7 +31,7 @@ const App: FC = () => {
           <Button asChild>
             <a href="/" className="flex gap-2">
               <HelloWorld />
-              <ArrowRight />
+               <ArrowRight />
             </a>
           </Button>
         </div>
