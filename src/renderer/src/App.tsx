@@ -4,7 +4,7 @@ import { ipcLink } from 'electron-trpc/renderer';
 import { FC, useState } from 'react';
 import superjson from 'superjson';
 import type { AppRouter } from '../../main/api';
-import { ModList } from './components/ModList';
+import { ModList } from './components/mod-list';
 
 export const trpc = createTRPCReact<AppRouter>();
 
