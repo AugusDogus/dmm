@@ -20,6 +20,7 @@ export function ModList() {
         hasNextPage,
         isFetchingNextPage,
         status,
+        refetch
     } = trpc.infiniteMods.useInfiniteQuery(
         {
             limit: 10,
@@ -28,9 +29,8 @@ export function ModList() {
         },
         {
             getNextPageParam: (lastPage) => lastPage.nextCursor,
-            initialCursor: 0,
             staleTime: 1000 * 60,
-            keepPreviousData: true,
+            keepPreviousData: false,
         }
     );
 
@@ -42,13 +42,23 @@ export function ModList() {
         }
     }, [inView, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
+    const handleSortChange = (value: string) => {
+        setSort(value as SortOption);
+        refetch();
+    };
+
+    const handleCategoryChange = (value: string) => {
+        setCategoryFilter(value);
+        refetch();
+    };
+
     if (status === 'loading') return <LoadingSkeleton />;
     if (status === 'error') return <div>Error: {error.message}</div>;
 
     return (
         <div className="p-4 mx-auto space-y-4 w-full max-w-7xl">
             <div className="flex gap-4 mb-6">
-                <Select value={sort} onValueChange={(value) => setSort(value as SortOption)}>
+                <Select value={sort} onValueChange={handleSortChange}>
                     <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Sort by..." />
                     </SelectTrigger>
@@ -58,7 +68,7 @@ export function ModList() {
                     </SelectContent>
                 </Select>
 
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <Select value={categoryFilter} onValueChange={handleCategoryChange}>
                     <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Filter by category..." />
                     </SelectTrigger>
@@ -72,10 +82,11 @@ export function ModList() {
                     </SelectContent>
                 </Select>
             </div>
+
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {data.pages.map((page) =>
+                {data.pages.map((page, i) =>
                     page.items.map((mod) => (
-                        <Card key={mod.name} className="transition-shadow hover:shadow-lg">
+                        <Card key={`${mod.name}-${i}`} className="transition-shadow hover:shadow-lg">
                             {mod.previewImage && (
                                 <div className="overflow-hidden relative w-full h-48">
                                     <img
@@ -103,12 +114,23 @@ export function ModList() {
                 )}
             </div>
 
-            <div ref={ref} className="flex justify-center items-center h-8">
-                {isFetchingNextPage && (
+            <div
+                ref={ref}
+                className="flex justify-center items-center mt-4 h-20"
+            >
+                {isFetchingNextPage ? (
                     <div className="space-x-2">
                         <Skeleton className="inline-block w-2 h-2 rounded-full" />
                         <Skeleton className="inline-block w-2 h-2 rounded-full" />
                         <Skeleton className="inline-block w-2 h-2 rounded-full" />
+                    </div>
+                ) : hasNextPage ? (
+                    <div className="text-sm text-muted-foreground">
+                        Scroll to load more
+                    </div>
+                ) : (
+                    <div className="text-sm text-muted-foreground">
+                        You've reached the end!
                     </div>
                 )}
             </div>
