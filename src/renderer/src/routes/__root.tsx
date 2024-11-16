@@ -1,10 +1,18 @@
 import { trpc } from '@renderer/lib/trpc';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRootRoute, Outlet } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { ipcLink } from 'electron-trpc/renderer';
-import { useState } from 'react';
+import { lazy, useState } from 'react';
 import superjson from 'superjson';
+
+const TanStackRouterDevtools =
+    process.env.NODE_ENV === 'production'
+        ? () => null // Render nothing in production
+        : lazy(() =>
+            import('@tanstack/router-devtools').then((module) => ({
+                default: module.TanStackRouterDevtools,
+            }))
+        );
 
 export const Route = createRootRoute({
     component: () => (

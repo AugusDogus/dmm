@@ -8,6 +8,7 @@
     "src/main/**/*.ts"
   ],
   "compilerOptions": {
+    "types": ["electron-vite/node"],
     "composite": true,
     "jsx": "react-jsx",
     "baseUrl": ".",

@@ -1,9 +1,11 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
-import { app, BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, nativeImage, shell } from 'electron';
 import { createIPCHandler } from 'electron-trpc/main';
 import { join } from 'path';
 import { router } from './api';
-import icon from '../../resources/icon.png';
+
+import appIcon from '../../resources/icon.png?asset';
+const icon = nativeImage.createFromPath(appIcon);
 
 function createWindow(): BrowserWindow {
   // Create the browser window.
@@ -12,7 +14,7 @@ function createWindow(): BrowserWindow {
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    icon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false

@@ -128,7 +128,6 @@ export function ModList() {
 const LoadingSkeleton = memo(function LoadingSkeleton() {
     return (
         <div className="p-4 mx-auto space-y-4 w-full max-w-7xl">
-            <h2 className="mb-6 text-2xl font-bold">Available Mods</h2>
             <div className="flex gap-4 mb-6">
                 <div className="w-[180px]">
                     <Skeleton className="h-10 rounded-md" />
