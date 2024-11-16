@@ -1,4 +1,4 @@
-import { trpc } from '@renderer/app';
+import { trpc } from '@renderer/lib/trpc';
 import { memo, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -14,11 +14,11 @@ interface Mod {
     previewImage?: string;
 }
 
-type SortOption = 'likes' | 'views' | 'newest';
+type SortOption = 'likes' | 'views';
 type FilterOption = 'all' | string;
 
 export function ModList() {
-    const [sort, setSort] = useState<SortOption>('newest');
+    const [sort, setSort] = useState<SortOption>('views');
     const [categoryFilter, setCategoryFilter] = useState<FilterOption>('all');
     const { ref, inView } = useInView();
 
@@ -62,9 +62,8 @@ export function ModList() {
                         <SelectValue placeholder="Sort by..." />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="newest">Newest</SelectItem>
-                        <SelectItem value="likes">Most Liked</SelectItem>
                         <SelectItem value="views">Most Viewed</SelectItem>
+                        <SelectItem value="likes">Most Liked</SelectItem>
                     </SelectContent>
                 </Select>
 
