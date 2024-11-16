@@ -1,4 +1,4 @@
-import { trpc } from '@renderer/App';
+import { trpc } from '@renderer/app';
 import { memo, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -38,6 +38,8 @@ export function ModList() {
         {
             getNextPageParam: (lastPage) => lastPage.nextCursor,
             initialCursor: 0,
+            staleTime: 1000 * 60,
+            keepPreviousData: true,
         }
     );
 
@@ -54,7 +56,6 @@ export function ModList() {
 
     return (
         <div className="p-4 mx-auto space-y-4 w-full max-w-7xl">
-            <h2 className="mb-6 text-2xl font-bold">Available Mods</h2>
             <div className="flex gap-4 mb-6">
                 <Select value={sort} onValueChange={(value) => setSort(value as SortOption)}>
                     <SelectTrigger className="w-[180px]">
@@ -127,27 +128,38 @@ export function ModList() {
 
 const LoadingSkeleton = memo(function LoadingSkeleton() {
     return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <Card key={i} className="w-full">
-                    <div className="w-full h-48">
-                        <Skeleton className="w-full h-full" />
-                    </div>
-                    <CardHeader>
-                        <Skeleton className="w-3/4 h-6" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-2">
-                            <Skeleton className="w-1/2 h-4" />
-                            <div className="flex justify-between">
-                                <Skeleton className="w-16 h-4" />
-                                <Skeleton className="w-16 h-4" />
-                                <Skeleton className="w-16 h-4" />
-                            </div>
+        <div className="p-4 mx-auto space-y-4 w-full max-w-7xl">
+            <h2 className="mb-6 text-2xl font-bold">Available Mods</h2>
+            <div className="flex gap-4 mb-6">
+                <div className="w-[180px]">
+                    <Skeleton className="h-10 rounded-md" />
+                </div>
+                <div className="w-[180px]">
+                    <Skeleton className="h-10 rounded-md" />
+                </div>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                    <Card key={i} className="w-full">
+                        <div className="overflow-hidden relative w-full h-48">
+                            <Skeleton className="w-full h-full" />
                         </div>
-                    </CardContent>
-                </Card>
-            ))}
+                        <CardHeader>
+                            <Skeleton className="w-3/4 h-6" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <Skeleton className="w-1/2 h-4" />
+                                <div className="flex justify-between">
+                                    <Skeleton className="w-16 h-4" />
+                                    <Skeleton className="w-16 h-4" />
+                                    <Skeleton className="w-16 h-4" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
         </div>
     );
 });

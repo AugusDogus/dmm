@@ -1,3 +1,4 @@
+import { Header } from '@renderer/components/header';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createTRPCReact } from '@trpc/react-query';
 import { ipcLink } from 'electron-trpc/renderer';
@@ -28,6 +29,7 @@ const App: FC = () => {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <div className="flex flex-col items-center w-full min-h-screen">
+          <Header />
           <ModList />
         </div>
       </QueryClientProvider>

@@ -2,8 +2,8 @@ import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import { app, BrowserWindow, shell } from 'electron';
 import { createIPCHandler } from 'electron-trpc/main';
 import { join } from 'path';
-import icon from '../../resources/icon.png';
 import { router } from './api';
+import icon from '../../resources/icon.png';
 
 function createWindow(): BrowserWindow {
   // Create the browser window.
