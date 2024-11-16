@@ -4,8 +4,10 @@
   "compilerOptions": {
     "composite": true,
     "types": ["electron-vite/node"],
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/renderer/src/*"]
