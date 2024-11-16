@@ -2,37 +2,35 @@ import z from 'zod';
 import { gameBananaApi } from '../gamebanana/api';
 import { t } from '../trpc';
 
-const DEADLOCK_GAME_ID = 20948;
-const ITEMS_PER_PAGE = 15;
-
-async function fetchDeadlockMods(page: number = 1) {
+async function fetchDeadlockMods() {
   try {
-    const mods = await gameBananaApi.getModList(DEADLOCK_GAME_ID, page, ITEMS_PER_PAGE);
-    return {
-      items: mods._aRecords.map((mod) => ({
+    const DEADLOCK_GAME_ID = 20948;
+    const mods = await gameBananaApi.getModList(DEADLOCK_GAME_ID);
+
+    return mods._aRecords.map((mod) => {
+      const previewImage = mod._aPreviewMedia._aImages[0]?._sBaseUrl + '/' + mod._aPreviewMedia._aImages[0]?._sFile530;
+      return {
         name: mod._sName,
         author: mod._aSubmitter._sName,
         likes: mod._nLikeCount,
         downloads: mod._nViewCount,
         category: mod._aRootCategory._sName,
-        previewImage: mod._aPreviewMedia._aImages[0]?._sBaseUrl + '/' + mod._aPreviewMedia._aImages[0]?._sFile530
-      })),
-      hasMore: mods._aRecords.length === ITEMS_PER_PAGE
-    };
+        previewImage
+      };
+    });
   } catch (error) {
     console.error('Failed to fetch mods:', error);
-    return { items: [], hasMore: false };
+    return [];
   }
 }
 
 export const modsQuery = t.procedure.query(async () => {
-  const { items } = await fetchDeadlockMods();
-  return items;
+  return await fetchDeadlockMods();
 });
 
 export const categoriesQuery = t.procedure.query(async () => {
-  const { items } = await fetchDeadlockMods();
-  const categories = new Set(items.map(mod => mod.category));
+  const mods = await fetchDeadlockMods();
+  const categories = new Set(mods.map(mod => mod.category));
   return Array.from(categories);
 });
 
@@ -46,31 +44,37 @@ export const infiniteModsQuery = t.procedure
     }),
   )
   .query(async ({ input }) => {
-    const cursor = input.cursor ?? 0;
-    const page = Math.floor(cursor / ITEMS_PER_PAGE) + 1;
+    const { limit, cursor, sort, category } = input;
     
-    const { items: allMods, hasMore } = await fetchDeadlockMods(page);
+    let query = await fetchDeadlockMods();
     
-    let filteredMods = [...allMods];
-    
-    if (input.category) {
-      filteredMods = filteredMods.filter(mod => mod.category === input.category);
+    if (category) {
+      query = query.filter(mod => mod.category === category);
     }
     
-    switch (input.sort) {
+    switch (sort) {
       case 'likes':
-        filteredMods.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+        query = query.sort((a, b) => (b.likes || 0) - (a.likes || 0));
         break;
       case 'views':
-        filteredMods.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
+        query = query.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
         break;
       default: // newest
-        filteredMods.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
+        query = query.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
         break;
+    }
+    
+    const items = query.slice(
+      cursor || 0,
+      (cursor || 0) + (limit ?? 10)
+    );
+    let nextCursor: typeof cursor = undefined;
+    if (items.length === (limit ?? 10)) {
+      nextCursor = cursor ? cursor + (limit ?? 10) : (limit ?? 10);
     }
 
     return {
-      items: filteredMods,
-      nextCursor: hasMore ? cursor + ITEMS_PER_PAGE : undefined
+      items,
+      nextCursor,
     };
   }); 
