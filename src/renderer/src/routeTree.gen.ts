@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SetupImport } from './routes/setup'
 import { Route as SettingsImport } from './routes/settings'
 import { Route as ModsImport } from './routes/mods'
 import { Route as IndexImport } from './routes/index'
@@ -28,6 +29,12 @@ const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+
+const SetupRoute = SetupImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const SettingsRoute = SettingsImport.update({
   id: '/settings',
@@ -72,6 +79,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsImport
       parentRoute: typeof rootRoute
     }
+    '/setup': {
+      id: '/setup'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof SetupImport
+      parentRoute: typeof rootRoute
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -88,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/mods': typeof ModsRoute
   '/settings': typeof SettingsRoute
+  '/setup': typeof SetupRoute
   '/about': typeof AboutLazyRoute
 }
 
@@ -95,6 +110,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/mods': typeof ModsRoute
   '/settings': typeof SettingsRoute
+  '/setup': typeof SetupRoute
   '/about': typeof AboutLazyRoute
 }
 
@@ -103,15 +119,16 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/mods': typeof ModsRoute
   '/settings': typeof SettingsRoute
+  '/setup': typeof SetupRoute
   '/about': typeof AboutLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/mods' | '/settings' | '/about'
+  fullPaths: '/' | '/mods' | '/settings' | '/setup' | '/about'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/mods' | '/settings' | '/about'
-  id: '__root__' | '/' | '/mods' | '/settings' | '/about'
+  to: '/' | '/mods' | '/settings' | '/setup' | '/about'
+  id: '__root__' | '/' | '/mods' | '/settings' | '/setup' | '/about'
   fileRoutesById: FileRoutesById
 }
 
@@ -119,6 +136,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ModsRoute: typeof ModsRoute
   SettingsRoute: typeof SettingsRoute
+  SetupRoute: typeof SetupRoute
   AboutLazyRoute: typeof AboutLazyRoute
 }
 
@@ -126,6 +144,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ModsRoute: ModsRoute,
   SettingsRoute: SettingsRoute,
+  SetupRoute: SetupRoute,
   AboutLazyRoute: AboutLazyRoute,
 }
 
@@ -142,6 +161,7 @@ export const routeTree = rootRoute
         "/",
         "/mods",
         "/settings",
+        "/setup",
         "/about"
       ]
     },
@@ -153,6 +173,9 @@ export const routeTree = rootRoute
     },
     "/settings": {
       "filePath": "settings.tsx"
+    },
+    "/setup": {
+      "filePath": "setup.tsx"
     },
     "/about": {
       "filePath": "about.lazy.tsx"

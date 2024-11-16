@@ -1,6 +1,6 @@
 import z from 'zod';
-import { t } from '../trpc';
 import { gameBananaApi } from '../gamebanana/api';
+import { t } from '../trpc';
 
 async function fetchDeadlockMods() {
   try {
@@ -57,10 +57,10 @@ export const infiniteModsQuery = t.procedure
         query = query.sort((a, b) => (b.likes || 0) - (a.likes || 0));
         break;
       case 'views':
-        query = query.sort((a, b) => b.downloads - a.downloads);
+        query = query.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
         break;
       default: // newest
-        query = query.sort((a, b) => b.downloads - a.downloads);
+        query = query.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
         break;
     }
     

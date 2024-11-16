@@ -70,7 +70,7 @@ export const ModSchema = z.object({
   _nLikeCount: z.number().optional(),
   _nPostCount: z.number().optional(),
   _bWasFeatured: z.boolean().optional(),
-  _nViewCount: z.number(),
+  _nViewCount: z.number().optional(),
   _bIsOwnedByAccessor: z.boolean(),
 })
 

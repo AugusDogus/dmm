@@ -1,0 +1,13 @@
+diff --git a/dist/settings.d.ts b/dist/settings.d.ts
+index 8bffe0ee25fd9bf86df03d9432850b0706765452..ede5a4ffd08b27c5f53205bce7b710c219c2ffc9 100644
+--- a/dist/settings.d.ts
++++ b/dist/settings.d.ts
+@@ -74,7 +74,7 @@ type SettingsValue = null | boolean | string | number | SettingsObject | Setting
+  * A `SettingsObject` is an object whose property values
+  * are of the type `SettingsValue`.
+  */
+-type SettingsObject = {
++export type SettingsObject = {
+     [key: string]: SettingsValue;
+ };
+ /**

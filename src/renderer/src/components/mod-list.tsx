@@ -5,15 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Skeleton } from './ui/skeleton';
 
-interface Mod {
-    name: string;
-    author: string;
-    likes: number | undefined;
-    downloads: number;
-    category: string;
-    previewImage?: string;
-}
-
 type SortOption = 'likes' | 'views';
 type FilterOption = 'all' | string;
 
@@ -83,7 +74,7 @@ export function ModList() {
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {data.pages.map((page) =>
-                    page.items.map((mod: Mod) => (
+                    page.items.map((mod) => (
                         <Card key={mod.name} className="transition-shadow hover:shadow-lg">
                             {mod.previewImage && (
                                 <div className="overflow-hidden relative w-full h-48">
@@ -102,7 +93,7 @@ export function ModList() {
                                     <p className="text-sm text-muted-foreground">By {mod.author}</p>
                                     <div className="flex justify-between text-sm">
                                         <span>👍 {mod.likes ?? 0}</span>
-                                        <span>⬇️ {mod.downloads}</span>
+                                        <span>⬇️ {mod.downloads ?? 0}</span>
                                         <span>🔗 {mod.category}</span>
                                     </div>
                                 </div>
