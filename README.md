@@ -9,6 +9,8 @@ A simple mod manager for [Deadlock](https://store.steampowered.com/app/1422450/D
 - [x] Filter mods by category
 - [x] Automatic game path detection
 - [ ] Simple mod installation
+- [ ] Automatic patching
+- [ ] Linux support
 
 ## Development
 
@@ -30,10 +32,8 @@ bun dev
 ```
 
 ```bash
-#Build for specific platforms
+#Build for Windows
 bun build:win # Windows
-bun build:mac # macOS
-bun build:linux # Linux
 ```
 ### Tech Stack
 
