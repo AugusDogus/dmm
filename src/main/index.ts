@@ -1,8 +1,10 @@
+
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import { app, BrowserWindow, nativeImage, shell } from 'electron';
 import { createIPCHandler } from 'electron-trpc/main';
 import { join } from 'path';
 import { router } from './api';
+
 
 import appIcon from '../../resources/icon.png?asset';
 const icon = nativeImage.createFromPath(appIcon);
@@ -12,6 +14,8 @@ function createWindow(): BrowserWindow {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
+    minWidth: 470,
+    minHeight: 640,
     show: false,
     autoHideMenuBar: true,
     icon,
@@ -44,7 +48,10 @@ function createWindow(): BrowserWindow {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  const debug = await import('electron-debug').then(m => m.default);
+
+  debug();
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 

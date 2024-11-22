@@ -1,6 +1,6 @@
 import { launchQuery } from './queries/launch';
-import { categoriesQuery, infiniteModsQuery, modsQuery } from './queries/mods';
-import { patchQuery } from './queries/patch';
+import { categoriesQuery, infiniteModsQuery, modsQuery, openModsFolderMutation } from './queries/mods';
+import { isPatchedQuery, patchQuery } from './queries/patch';
 import { setSteamPath } from './queries/setSteamPath';
 import { completeSetupMutation, settingsQuery } from './queries/settings';
 import { steamQuery } from './queries/steam';
@@ -15,7 +15,9 @@ export const router = t.router({
   settings: settingsQuery,
   completeSetup: completeSetupMutation,
   patch: patchQuery,
-  launch: launchQuery
+  isPatched: isPatchedQuery,
+  launch: launchQuery,
+  openModsFolder: openModsFolderMutation
 });
 
 export type AppRouter = typeof router;

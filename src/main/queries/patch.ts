@@ -42,6 +42,18 @@ const replaceSearchPaths = (content: string) => {
            content.slice(searchPathsEnd);
 };
 
+export const isPatchedQuery = t.procedure.query(async () => {
+    const path = await settings.get('steamPath') as string;
+    const filePath = join(path, FILE_PATH.RELATIVE);
+    try {
+        const content = await readFile(filePath, 'utf-8');
+        return isAlreadyPatched(content);
+    } catch (error) {
+        console.error('Error checking patch status:', error);
+        throw error;
+    }
+});
+
 export const patchQuery = t.procedure.mutation(async () => {
     const path = await settings.get('steamPath') as string;
     const filePath = join(path, FILE_PATH.RELATIVE);

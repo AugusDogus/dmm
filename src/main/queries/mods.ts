@@ -1,3 +1,6 @@
+import { shell } from 'electron';
+import path from 'path';
+import { getGamePath } from 'steam-game-path';
 import z from 'zod';
 import { gameBananaApi } from '../gamebanana/api';
 import { t } from '../trpc';
@@ -74,3 +77,11 @@ export const infiniteModsQuery = t.procedure
       nextCursor: hasMore ? cursor + ITEMS_PER_PAGE : undefined
     };
   }); 
+
+export const openModsFolderMutation = t.procedure.mutation(async () => {
+  const gamePath = getGamePath(1422450)?.game?.path;
+  if (!gamePath) {
+   return;
+  }
+  await shell.openPath(path.join(gamePath, 'game/citadel/addons'));
+ });
