@@ -1,5 +1,6 @@
+import { observable } from '@trpc/server/observable';
 import settings from 'electron-settings';
-import { readFile, writeFile } from 'fs/promises';
+import { readFile, watch, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { t } from '../trpc';
 
@@ -42,18 +43,6 @@ const replaceSearchPaths = (content: string) => {
            content.slice(searchPathsEnd);
 };
 
-export const isPatchedQuery = t.procedure.query(async () => {
-    const path = await settings.get('steamPath') as string;
-    const filePath = join(path, FILE_PATH.RELATIVE);
-    try {
-        const content = await readFile(filePath, 'utf-8');
-        return isAlreadyPatched(content);
-    } catch (error) {
-        console.error('Error checking patch status:', error);
-        throw error;
-    }
-});
-
 export const patchQuery = t.procedure.mutation(async () => {
     const path = await settings.get('steamPath') as string;
     const filePath = join(path, FILE_PATH.RELATIVE);
@@ -73,4 +62,37 @@ export const patchQuery = t.procedure.mutation(async () => {
         console.error('Error modifying file:', error);
         throw error;
     }
+});
+
+export const watchPatchStatusQuery = t.procedure.subscription(async () => {
+    const path = await settings.get('steamPath') as string;
+    const filePath = join(path, FILE_PATH.RELATIVE);
+    
+    return observable((emit) => {
+        // Emit initial state
+        readFile(filePath, 'utf-8')
+            .then(content => emit.next(isAlreadyPatched(content)))
+            .catch(error => {
+                console.error('Error reading initial patch status:', error);
+                emit.error(error);
+            });
+
+        // Start watching
+        const watchFile = async () => {
+            try {
+                const watcher = watch(filePath);
+                for await (const { eventType } of watcher) {
+                    if (eventType === 'change') {
+                        const content = await readFile(filePath, 'utf-8');
+                        emit.next(isAlreadyPatched(content));
+                    }
+                }
+            } catch (error) {
+                console.error('Error watching file:', error);
+                emit.error(error);
+            }
+        };
+
+        watchFile();
+    });
 });

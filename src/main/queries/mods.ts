@@ -28,11 +28,6 @@ async function fetchDeadlockMods(page: number = 1) {
   }
 }
 
-export const modsQuery = t.procedure.query(async () => {
-  const { items } = await fetchDeadlockMods();
-  return items;
-});
-
 export const categoriesQuery = t.procedure.query(async () => {
   const { items } = await fetchDeadlockMods();
   const categories = new Set(items.map(mod => mod.category));

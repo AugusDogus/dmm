@@ -51,7 +51,7 @@ function createWindow(): BrowserWindow {
 app.whenReady().then(async () => {
   const debug = await import('electron-debug').then(m => m.default);
 
-  debug();
+  debug({showDevTools: false});
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
